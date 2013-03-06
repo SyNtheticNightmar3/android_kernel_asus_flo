@@ -149,21 +149,6 @@ static void put_tty_queue(unsigned char c, struct tty_struct *tty)
 }
 
 /**
- *	check_unthrottle	-	allow new receive data
- *	@tty; tty device
- *
- *	Check whether to call the driver unthrottle functions
- *
- *	Can sleep, may be called under the atomic_read_lock mutex but
- *	this is not guaranteed.
- */
-static void check_unthrottle(struct tty_struct *tty)
-{
-	if (tty->count)
-		tty_unthrottle(tty);
-}
-
-/**
  *	reset_buffer_flags	-	reset buffer state
  *	@tty: terminal to reset
  *
