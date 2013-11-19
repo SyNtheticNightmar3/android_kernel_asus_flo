@@ -296,7 +296,6 @@ static struct kioctx *ioctx_alloc(unsigned nr_events)
 
 out_cleanup:
 	err = -EAGAIN;
-	aio_free_ring(ctx);
 out_freectx:
 	mmdrop(mm);
 	kmem_cache_free(kioctx_cachep, ctx);
