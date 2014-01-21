@@ -412,6 +412,12 @@ struct zone {
 	int			compact_order_failed;
 #endif
 
+	/*
+	 * Number of MIGRATE_RESEVE page block. To maintain for just
+	 * optimization. Protected by zone->lock.
+	 */
+	unsigned long		nr_migrate_reserve_block;
+
 	ZONE_PADDING(_pad1_)
 
 	/* Fields commonly accessed by the page reclaim scanner */
