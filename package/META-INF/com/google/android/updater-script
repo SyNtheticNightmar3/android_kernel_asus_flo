@@ -1,0 +1,24 @@
+ui_print("Installing project: Evans B5-25...");
+ui_print("AOSP kernel for deb/flo...");
+assert(getprop("ro.product.device") == "deb" || getprop("ro.build.product") == "deb" || getprop("ro.product.device") == "flo" || getprop("ro.build.product") == "deb" || getprop("ro.product.device") == "flo" || getprop("ro.build.product") == "flo");
+ui_print("Mount /System Folder...");
+mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system");
+ui_print("Extracting System Files...");
+ui_print("Delete Old Modules...");
+delete_recursive("/system/lib/modules");
+package_extract_dir("system", "/system");
+ui_print("Extracting Kernel files...");
+package_extract_dir("kernel", "/tmp");
+set_perm(0, 0, 0777, "/tmp/busybox");
+set_perm(0, 0, 0777, "/tmp/mkbootimg.sh");
+set_perm(0, 0, 0777, "/tmp/mkbootimg");
+set_perm(0, 0, 0777, "/tmp/unpackbootimg");
+ui_print("Installing kernel...");
+run_program("/tmp/busybox", "dd", "if=/dev/block/platform/msm_sdcc.1/by-name/boot", "of=/tmp/boot.img");
+run_program("/tmp/unpackbootimg", "-i", "/tmp/boot.img", "-o", "/tmp/");
+run_program("/tmp/mkbootimg.sh");
+run_program("/tmp/busybox", "dd", "if=/tmp/newboot.img", "of=/dev/block/platform/msm_sdcc.1/by-name/boot");
+unmount("/system");
+set_progress(1.000000);
+ui_print("Install Complete...");
+
