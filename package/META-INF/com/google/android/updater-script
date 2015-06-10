@@ -1,4 +1,4 @@
-ui_print("Installing project: Evans B5-25...");
+ui_print("Installing ED-E...");
 ui_print("AOSP kernel for deb/flo...");
 assert(getprop("ro.product.device") == "deb" || getprop("ro.build.product") == "deb" || getprop("ro.product.device") == "flo" || getprop("ro.build.product") == "deb" || getprop("ro.product.device") == "flo" || getprop("ro.build.product") == "flo");
 ui_print("Mount /System Folder...");

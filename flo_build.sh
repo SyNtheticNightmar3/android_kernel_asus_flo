@@ -32,7 +32,7 @@ if [ "$CLEAN" = "true" ]; then
     echo "Cleaning package dir..."
     rm -rf out
 else
-    make flo_defconfig;
+    make flo_ede_defconfig;
 
     time logsave build.log make -j4;
 
@@ -48,7 +48,7 @@ else
             echo "Packaging..."
             cd out
             cdate=`date "+%Y-%m-%d"`
-            zfile=BoxCar-kernel-flo-$cdate.zip
+            zfile=ED-E-kernel-flo-$cdate.zip
             zip -r $zfile .
             cd ..
             echo " ZIPFILE: out/$zfile"
