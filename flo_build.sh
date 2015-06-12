@@ -5,10 +5,10 @@
 # ccache -M 2G;
 
 # Add toolchain to path & allow caching from CodeBench (much faster than ccache!).
-export PATH=$HOME/gcc/scb_arm-eabi-2014.05/bin/cache:$HOME/gcc/scb_arm-eabi-2014.05/bin:$PATH
+# export PATH=$HOME/gcc/scb_arm-eabi-2014.05/bin/cache:$HOME/gcc/scb_arm-eabi-2014.05/bin:$PATH
 
 # For CodeBench caching, arm-none-*eabi- must be called explicitly from $PATH.
-export CROSS_COMPILE=arm-none-linux-gnueabi-
+export CROSS_COMPILE=arm-linux-gnu-
 
 export ARCH=arm;
 
