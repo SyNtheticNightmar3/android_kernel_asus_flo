@@ -93,7 +93,7 @@ tSirRetStatus schGetP2pIeOffset(tANI_U8 *pExtraIe, tANI_U32 extraIeLen, tANI_U16
     {
         if(*pExtraIe == 0xDD)
         {
-            if(palEqualMemory(NULL, (void *)(pExtraIe+2), &P2pOui, sizeof(P2pOui)))
+            if(palEqualMemory(NULL, (void *)(pExtraIe+2), (tANI_U8 *)&P2pOui, sizeof(P2pOui)))
             {
                 status = eSIR_SUCCESS;
                 break;
