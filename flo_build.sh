@@ -49,7 +49,8 @@ else
             cd out
             cdate=`date "+%Y-%m-%d"`
             zfile=ED-E-kernel-flo-$cdate.zip
-            zip -r $zfile .
+            zip -r $zfile . -x *.zip
+            rm -rf kernel META-INF
             cd ..
             echo " ZIPFILE: out/$zfile"
         else
