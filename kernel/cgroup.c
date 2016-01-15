@@ -2175,14 +2175,13 @@ static int attach_task_by_pid(struct cgroup *cgrp, u64 pid, bool threadgroup)
 	if (!cgroup_lock_live_group(cgrp))
 		return -ENODEV;
 
-retry_find_task:
+	threadgroup_lock(tsk);
 	rcu_read_lock();
 	if (pid) {
 		tsk = find_task_by_vpid(pid);
 		if (!tsk) {
-			rcu_read_unlock();
-			ret= -ESRCH;
-			goto out_unlock_cgroup;
+			ret = -ESRCH;
+			goto out_unlock_rcu;
 		}
 		/*
 		 * even if we're attaching all tasks in the thread group, we
@@ -2201,8 +2200,7 @@ retry_find_task:
 			tset.single.cgrp = cgrp;
 			ret = cgroup_allow_attach(cgrp, &tset);
 			if (ret) {
-				rcu_read_unlock();
-				goto out_unlock_cgroup;
+				goto out_unlock_rcu;
 			}
 		}
 	} else
@@ -2213,27 +2211,18 @@ retry_find_task:
 	get_task_struct(tsk);
 	rcu_read_unlock();
 
-	threadgroup_lock(tsk);
-	if (threadgroup) {
-		if (!thread_group_leader(tsk)) {
-			/*
-			 * a race with de_thread from another thread's exec()
-			 * may strip us of our leadership, if this happens,
-			 * there is no choice but to throw this task away and
-			 * try again; this is
-			 * "double-double-toil-and-trouble-check locking".
-			 */
-			threadgroup_unlock(tsk);
-			put_task_struct(tsk);
-			goto retry_find_task;
-		}
+	if (threadgroup)
 		ret = cgroup_attach_proc(cgrp, tsk);
-	} else
+	else
 		ret = cgroup_attach_task(cgrp, tsk);
-	threadgroup_unlock(tsk);
 
 	put_task_struct(tsk);
-out_unlock_cgroup:
+	goto out_unlock_threadgroup;
+
+out_unlock_rcu:
+	rcu_read_unlock();
+out_unlock_threadgroup:
+	threadgroup_unlock(tsk);
 	cgroup_unlock();
 	return ret;
 }
