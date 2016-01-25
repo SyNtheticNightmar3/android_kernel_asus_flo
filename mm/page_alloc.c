@@ -3715,7 +3715,6 @@ static void setup_zone_migrate_reserve(struct zone *zone)
 	unsigned long block_migratetype;
 	int reserve;
 	int old_reserve;
-	int new_reserve;
 
 	/*
 	 * Get the start pfn, end pfn and the number of blocks to reserve
@@ -3736,12 +3735,13 @@ static void setup_zone_migrate_reserve(struct zone *zone)
 	 * is assumed to be in place to help anti-fragmentation for the
 	 * future allocation of hugepages at runtime.
 	 */
-	reserve = new_reserve = min(2, reserve);
+	reserve = min(2, reserve);
 	old_reserve = zone->nr_migrate_reserve_block;
 
 	/* When memory hot-add, we almost always need to do nothing */
 	if (reserve == old_reserve)
 		return;
+	zone->nr_migrate_reserve_block = reserve;
 
 	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
 		if (!pfn_valid(pfn))
@@ -3796,8 +3796,6 @@ static void setup_zone_migrate_reserve(struct zone *zone)
 			move_freepages_block(zone, page, MIGRATE_MOVABLE);
 		}
 	}
-
-	zone->nr_migrate_reserve_block = new_reserve;
 }
 
 /*
